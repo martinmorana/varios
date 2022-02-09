@@ -10,7 +10,7 @@ class SumaClient:
     def __init__(self):
         self.__MANAGER_URL = "https://sm3/rpc/api"
         self.__MANAGER_LOGIN = "l0653497"
-        self.__MANAGER_PASSWORD = "Galicia2019"
+        self.__MANAGER_PASSWORD = "xxxxx"
         self.__key = None
 
     def login(self):
