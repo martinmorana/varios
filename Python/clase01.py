@@ -1,7 +1,9 @@
 class Restaurant:
-    def agregar_restaurante(self):
-        print('Agregando')
+    def agregar_restaurante(self,nombre): # creo el metodo agregar_restaurante
+        self.nombre = nombre # atributo
 
 # instanciar la clase
 restaurant = Restaurant()
-restaurant.agregar_restaurante()
+
+# llamo al metodo de la clase
+restaurant.agregar_restaurante('Pizzeria')
