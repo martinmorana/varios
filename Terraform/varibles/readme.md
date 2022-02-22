@@ -1,4 +1,4 @@
-erraform Variables
+Terraform Variables
 💡 Usaremos variables siempre que necesitemos tener un valor estático en nuestra configuración.
 Un cambio en el este valor estático debería producirse en solo un lugar, es decir, en la instanciación de la variable.  
 
