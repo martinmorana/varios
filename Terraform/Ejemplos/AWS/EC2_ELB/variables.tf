@@ -26,7 +26,7 @@ variable "ubuntu_ami" {
   type        = map(string)
 
   default = {
-    eu-west-1 = "ami-0aef57767f5404a3c" # Ubuntu en Dublin
+    us-east-1 = "ami-04505e74c0741db8d" # Ubuntu en Virginia
     us-west-2 = "ami-005383956f2e5fb96" # Ubuntu en London
   }
 }
