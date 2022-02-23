@@ -2,62 +2,44 @@
 # Define el provider de AWS
 # -------------------------
 provider "aws" {
+  region = local.region
+}
+
+locals {
   region = "us-east-1"
+  ami    = var.ubuntu_ami[local.region]
 }
 
-# -----------------------------------------------
-# Data source que obtiene el id del AZ eu-west-1a
-# -----------------------------------------------
-data "aws_subnet" "az_a" {
-  availability_zone = "us-east-1a"
-}
+# ------------------------------------
+# Data source que obtiene el id del AZ
+# ------------------------------------
+data "aws_subnet" "public_subnet" {
+  for_each = var.servidores
 
-# -----------------------------------------------
-# Data source que obtiene el id del AZ eu-west-1a
-# -----------------------------------------------
-data "aws_subnet" "az_b" {
-  availability_zone = "us-east-1b"
+  availability_zone = "${local.region}${each.value.az}"
 }
 
 # ---------------------------------------
 # Define una instancia EC2 con AMI Ubuntu
 # ---------------------------------------
-resource "aws_instance" "servidor_1" {
-  ami                    = var.ubuntu_ami["us-east-1"]
+resource "aws_instance" "servidor" {
+  for_each = var.servidores
+
+  ami                    = local.ami
   instance_type          = var.tipo_instancia
-  subnet_id              = data.aws_subnet.az_a.id
+  subnet_id              = data.aws_subnet.public_subnet[each.key].id
   vpc_security_group_ids = [aws_security_group.mi_grupo_de_seguridad.id]
 
   // Escribimos un "here document" que es
   // usado durante la inicialización
   user_data = <<-EOF
               #!/bin/bash
-              echo "Hola Terraformers! Soy servidor 1" > index.html
+              echo "Hola Terraformers! Soy ${each.value.nombre}" > index.html
               nohup busybox httpd -f -p ${var.puerto_servidor} &
               EOF
 
   tags = {
-    Name = "servidor-1"
-  }
-}
-
-# ----------------------------------------------
-# Define la segunda instancia EC2 con AMI Ubuntu
-# ----------------------------------------------
-resource "aws_instance" "servidor_2" {
-  ami                    = var.ubuntu_ami["us-east-1"]
-  instance_type          = var.tipo_instancia
-  subnet_id              = data.aws_subnet.az_b.id
-  vpc_security_group_ids = [aws_security_group.mi_grupo_de_seguridad.id]
-
-  user_data = <<-EOF
-              #!/bin/bash
-              echo "Hola Terraformers! Soy servidor 2" > index.html
-              nohup busybox httpd -f -p ${var.puerto_servidor} &
-              EOF
-
-  tags = {
-    Name = "servidor-2"
+    Name = each.value.nombre
   }
 }
 
@@ -84,7 +66,7 @@ resource "aws_lb" "alb" {
   name               = "terraformers-alb"
   security_groups    = [aws_security_group.alb.id]
 
-  subnets = [data.aws_subnet.az_a.id, data.aws_subnet.az_b.id]
+  subnets = [for subnet in data.aws_subnet.public_subnet : subnet.id]
 }
 
 # ------------------------------------
@@ -135,21 +117,14 @@ resource "aws_lb_target_group" "this" {
   }
 }
 
-# -----------------------------
-# Attachment para el servidor 1
-# -----------------------------
-resource "aws_lb_target_group_attachment" "servidor_1" {
-  target_group_arn = aws_lb_target_group.this.arn
-  target_id        = aws_instance.servidor_1.id
-  port             = var.puerto_servidor
-}
+# ------------------------------
+# Attachment para los servidores
+# ------------------------------
+resource "aws_lb_target_group_attachment" "servidor" {
+  for_each = var.servidores
 
-# -----------------------------
-# Attachment para el servidor 2
-# -----------------------------
-resource "aws_lb_target_group_attachment" "servidor_2" {
   target_group_arn = aws_lb_target_group.this.arn
-  target_id        = aws_instance.servidor_2.id
+  target_id        = aws_instance.servidor[each.key].id
   port             = var.puerto_servidor
 }
 
