@@ -13,7 +13,7 @@ variable "usuarios" {
 resource "aws_iam_user" "ejemplo" {
   count = var.usuarios
 
-  name = "usuario-${each.index}"
+  name = "usuario-${count.index}"
 }
 
 output "arn_usuario" {
