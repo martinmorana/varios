@@ -7,20 +7,19 @@ provider "aws" {
 
 variable "usuarios" {
   description = "Nombre usuarios IAM"
-  type        = set(string)
-  default     = ["maria", "manuel"]
+  type        = number
 }
 
 resource "aws_iam_user" "ejemplo" {
-  for_each = var.usuarios
+  count = var.usuarios
 
-  name = "usuario-${each.value}"
+  name = "usuario-${each.index}"
 }
 
 output "arn_usuario" {
-  value = aws_iam_user.ejemplo["manuel"].arn
+  value = aws_iam_user.ejemplo[2].arn
 }
 
 output "arn_todos_usuarios" {
-  value = [for usuario in aws_iam_user.ejemplo : usuario.arn]
+  value = aws_iam_user.ejemplo[*].arn
 }
