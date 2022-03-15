@@ -1,0 +1,7 @@
+total 8
+drwxr-xr-x  4 martinmorona  staff  128 Mar 15 17:20 Bash
+drwxr-xr-x  3 martinmorona  staff   96 Mar 15 17:18 PHP
+drwxr-xr-x  6 martinmorona  staff  192 Mar 15 17:18 Python
+-rw-r--r--  1 martinmorona  staff  196 Mar 15 17:18 README.md
+drwxr-xr-x  4 martinmorona  staff  128 Mar 15 17:18 Terraform
+-rw-r--r--  1 martinmorona  staff    0 Mar 15 17:22 pepe.txt
