@@ -20,7 +20,7 @@ def agregar_canciones():
     agregar_cancion = True
     while agregar_cancion:
         nombre_playlist = playlist['nombre']
-        pregunta = f'Agregar las canciones a la playlist {nombre_playlist}: \r\n'
+        pregunta = f'Agregar las canciones a la playlist {nombre_playlist}: \r\n'  # Tiene el f porque mezclo un string con una variable
         pregunta += 'Escribe X para salir \r\n'
         cancion = input(pregunta)
         if cancion == "X":
