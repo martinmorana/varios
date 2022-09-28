@@ -4,12 +4,16 @@ import os
 AMBIENTE = os.getenv('AMBIENTE')
 print(AMBIENTE)
 
-with open('config.yaml') as stream:
-   data = yaml.safe_load(stream)
-   #print(data)
 
-test = data[AMBIENTE]['configmap']['data']
-print(test)
+def read_values():
+   with open('config.yaml') as stream:
+      data = yaml.safe_load(stream)
+      #print(data)
+
+   test = data[AMBIENTE]['configmap']['data']
+   print(test)
+
+read_values()
 #test.update(dict(variable1=11, variable2=22))
 with open('output.yaml') as stream2:
    configmap = yaml.safe_load(stream2)
