@@ -1,6 +1,7 @@
 from ctypes.wintypes import PINT
 import yaml
 import os
+# /usr/bin/python3 test3.py
 
 AMBIENTE = os.getenv('AMBIENTE')
 print(AMBIENTE)
