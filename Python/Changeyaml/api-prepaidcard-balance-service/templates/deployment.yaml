@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: {{ .Chart.Name }}
+  name: {{ .Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  replicas: {{ .Values.replicaCount }}
+  revisionHistoryLimit: {{ .Values.historyLimitReplicas }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+        run: backend
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+          envFrom:
+          - configMapRef:
+              name: {{ $.Chart.Name }}-env              
+          env:
+          - name: AWS_XRAY_DAEMON_ADDRESS
+            value: {{ .Values.variables.AWS_XRAY_DAEMON_ADDRESS }}
+          - name: VERSION
+            value: {{ .Values.variables.VERSION }}
+          - name: ENV
+            value: {{ .Values.variables.ENV }}
+          livenessProbe:
+            httpGet:
+              path: prepaidcard/v1/balances/health/liveness
+              port: {{ $.Values.health.port }}
+            failureThreshold: {{ $.Values.health.liveness.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.health.liveness.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.health.liveness.periodSeconds }}
+            successThreshold: {{ $.Values.health.liveness.successThreshold }}
+            timeoutSeconds: {{ $.Values.health.liveness.timeoutSeconds }}
+          readinessProbe:
+            httpGet:
+              path: prepaidcard/v1/balances/health/readiness
+              port: {{ $.Values.health.port }}
+            failureThreshold: {{ $.Values.health.readiness.failureThreshold }}
+            initialDelaySeconds: {{ $.Values.health.readiness.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.health.readiness.periodSeconds }}
+            successThreshold: {{ $.Values.health.readiness.successThreshold }}
+            timeoutSeconds: {{ $.Values.health.readiness.timeoutSeconds }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

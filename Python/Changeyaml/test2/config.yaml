@@ -1,0 +1,33 @@
+configmap:
+  data:
+    variable1: valor1
+
+grids:
+  phxgrid:
+    class: spexxy.grid.FilesGrid
+    filename: /home/geoffrey/Bureau/husser_interpolator/grid.csv
+
+interpolators:
+  phx:
+    class: spexxy.interpolator.SplineInterpolator
+    grid: phxgrid
+    derivs: phxgrid
+
+components:
+  star:
+    class: spexxy.component.GridComponent
+    interpolator: phx
+    init:
+    - class:    
+      values2:
+        logg: 4.0
+        Alpha: 0.
+        v: 0
+        sig: 0
+
+
+main:
+  class: spexxy.main.ParamsFit
+  components: [star]
+  fixparams:
+    star: [sig, Alpha, logg]

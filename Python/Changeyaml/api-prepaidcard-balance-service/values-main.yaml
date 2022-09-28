@@ -1,0 +1,51 @@
+environment: main
+replicaCount: 1
+historyLimitReplicas: 0
+namespace: backend
+containerPort: 8080
+
+image:
+  repository: 992638793238.dkr.ecr.us-east-1.amazonaws.com/api-prepaidcard-balance-service
+  tag: adef7c16-dev
+  pullPolicy: Always
+
+service:
+  type: Internal
+  port: 8080
+  protocol: TCP
+  target_port: 8080
+  name: http
+  node_port: 30002
+
+variables:
+  VERSION: 0.0.1-SNAPSHOT
+  ENV: production
+  AWS_XRAY_DAEMON_ADDRESS: xray-daemon.cloudwatch-monitoring.svc.cluster.local:2000
+
+java:
+  joptions: --logging.config=classpath:production/logback-spring.xml
+  logtype: json
+
+configmap:
+  variable1: valor1
+
+resources:
+  requests:
+    cpu: 100m
+  limits:
+    cpu: 250m
+
+health:
+  port: 8080
+  liveness:
+    failureThreshold: 2
+    initialDelaySeconds: 160
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 3
+  readiness:
+    failureThreshold: 2
+    initialDelaySeconds: 160
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 3
