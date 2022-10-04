@@ -1,6 +1,3 @@
-configmap:
-  data:
-    variable1: valor1
 containerPort: 8080
 environment: main
 health:
@@ -39,10 +36,11 @@ service:
   protocol: TCP
   target_port: 8080
   type: Internal
-variable1: valor1
-variable2: valor2
-variable3: valor3
 variables:
   AWS_XRAY_DAEMON_ADDRESS: xray-daemon.cloudwatch-monitoring.svc.cluster.local:2000
   ENV: production
   VERSION: 0.0.1-SNAPSHOT
+
+configmap:
+  data:
+    variable1: valorx
