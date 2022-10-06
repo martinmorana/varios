@@ -8,27 +8,38 @@ print(AMBIENTE)
 
 
 def read_values():
-   with open('config.yaml') as stream:
-      data = yaml.safe_load(stream)
+   with open('config.yaml') as yaml_config:
+      configmap_input = yaml.safe_load(yaml_config)
       #print(data)
-   test = data[AMBIENTE]['configmap']['data']
-   print(test)
+   test = configmap_input[AMBIENTE]['configmap']['data']
+   print(test['variable1'])
+   for configmap in test:
+        print(configmap)
+        print(test[configmap])
+
+   with open('output.yaml') as yaml_output:
+      data = yaml.safe_load(yaml_output)
+      #print(data)
   
+   
 
-def write_values():
- 
-   with open('output.yaml') as stream2:
-      configmap = yaml.safe_load(stream2)
-      configmap2 = configmap['configmap']['data']
-      #configmap.update(test)
-      print(configmap2)
-      configmap2 = ['configmap']['data']
-   #with open('output.yaml', "w") as stream2:   
-      #yaml.safe_dump(configmap, stream2, default_flow_style=False, explicit_start=False, allow_unicode=True, encoding='utf-8')
-      #yaml.dump(test, stream2)
 
+      
 read_values()
-write_values()
+
+#write_values()
 #test.update(dict(variable1=11, variable2=22))
 
+
+""" with open('values-main.yaml') as f:
+    doc = yaml.load(f)
+    # values = doc['components']['star']['init'][0]['values2']
+    # values['logg'] = "pwee"
+    # with open(f'config-2.yaml', 'w') as out:
+    #     yaml.dump(doc, out)
+    values = doc['configmap']['data']
+    values['variable1'] = "pwee"
+    values['variable2'] = "pwee"
+    with open(f'values-main.yaml', 'w') as out:
+        yaml.dump(doc, out) """
   
