@@ -1,0 +1,25 @@
+dev:
+  configmap:
+    data:
+      VaRiAbles: 111
+      variable2: 22
+      variable4: 44
+      Pedro: Carlitos
+sandbox:
+  configmap:
+    data:
+      variable1: 1
+      variable2: 2
+      variable3: 3
+qa:
+  configmap:
+    data:
+      variable1: 1
+      variable2: 2
+      variable3: 3
+prod:
+  configmap:
+    data:
+      variable1: 1
+      variable2: 2
+      variable3: 3
