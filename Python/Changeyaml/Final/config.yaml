@@ -1,9 +1,9 @@
 dev:
   configmap:
     data:
-      variable1: valor1
-      variable2: valor2
-      variable3: valor3
+      variable1: 11
+      variable2: 22
+      variable4: 22
 sandbox:
   configmap:
     data:

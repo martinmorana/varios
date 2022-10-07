@@ -4,7 +4,7 @@ import os
 # /usr/bin/python3 test3.py
 
 AMBIENTE = os.getenv('AMBIENTE')
-print(AMBIENTE)
+print('el entorno es ' + AMBIENTE)
 
 
 def read_values():
@@ -12,14 +12,26 @@ def read_values():
       configmap_input = yaml.safe_load(yaml_config)
       #print(data)
    test = configmap_input[AMBIENTE]['configmap']['data']
-   print(test['variable1'])
-   for configmap in test:
-        print(configmap)
-        print(test[configmap])
 
-   with open('output.yaml') as yaml_output:
-      data = yaml.safe_load(yaml_output)
-      #print(data)
+   
+   stream = open('output.yaml', 'r')
+   data = yaml.safe_load(stream)
+   #configmap_output = data['configmap']['data']
+
+   for configmap in test:
+         print(configmap)
+         print(test[configmap])
+         #configmap_output[configmap] = test[configmap]
+         data['configmap']['data'][configmap] = test[configmap]
+         print(data)
+
+   print(data)
+
+   with open('output.yaml', 'w') as yaml_file:
+    yaml_file.write( yaml.dump(data, default_flow_style=False))
+ 
+
+
   
    
 
