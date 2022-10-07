@@ -1,6 +1,12 @@
 from ctypes.wintypes import PINT
 import yaml
 import os
+import os.path
+
+file_exists = os.path.exists('config.yaml')
+if not file_exists:
+   print('NO existe el archivo')
+   quit()
 
 
 AMBIENTE = os.getenv('AMBIENTE')
@@ -26,29 +32,32 @@ print('Vamos a configurar el Microservicio ' + str(MICROSERVICIO) + ' en el ambi
 
 def Change_YAML():
    with open('config.yaml') as yaml_config:
-      configmap_input = yaml.safe_load(yaml_config)
-   test = configmap_input[AMBIENTE]['configmap']['data']
+      try:
+         configmap_input = yaml.safe_load(yaml_config)
+      except yaml.YAMLError as exc:
+         print('Error al abrir el archivo config.yaml ' + str(exc))
+   new_values = configmap_input[AMBIENTE]['configmap']['data']   
 
-   
-   stream = open(MICROSERVICE_YAML, 'r')
-   data = yaml.safe_load(stream)
+   values_main_yaml = open(MICROSERVICE_YAML, 'r')
+   try:
+      values_main_yaml_data = yaml.safe_load(values_main_yaml)
+   except yaml.YAMLError as exc:
+      print(exc)
 
    configmap_template = open(MICROSERVICE_CONFIGMAP_YAML, 'r')
    try:
       configmap_template_data = yaml.safe_load(configmap_template)
    except yaml.YAMLError as exc:
       print(exc)
-   
 
-   for configmap in test:
-         print('Configuro la Variable de Entorno: ' + str(configmap) + ' = '+ str(test[configmap]))
-         data['configmap']['data'][configmap.lower()] = test[configmap]
+   for configmap in new_values:
+         print('Configuro la Variable de Entorno: ' + str(configmap) + ' = '+ str(new_values[configmap]))
+         values_main_yaml_data['configmap']['data'][configmap.lower()] = new_values[configmap]
          configmap_template_data['data'][configmap.upper()] =  "{{ default .Values.configmap.data." + str(configmap.lower()) + "}}"
-
 
    with open(MICROSERVICE_YAML, 'w') as yaml_file:
       try:
-         yaml_file.write( yaml.dump(data, default_flow_style=False))
+         yaml_file.write( yaml.dump(values_main_yaml_data, default_flow_style=False))
       except yaml.YAMLError as exc:
          print(exc)
    
