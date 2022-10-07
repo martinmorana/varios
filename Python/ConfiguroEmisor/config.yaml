@@ -1,6 +1,7 @@
 dev:
-  nombre: Bimos
-  port: 3444
+  nombre: minuTosSSDFRE
+  port: 8899
+  database: minuTosSSDFRE_Deve
 sandbox:
   configmap:
     data:
