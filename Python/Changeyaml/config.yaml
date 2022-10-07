@@ -1,10 +1,8 @@
 dev:
   configmap:
     data:
-      VaRiAbles: 111
+      emisor: BIMO
       variable2: 22
-      variable4: 44
-      Pedro: Carlitos
 sandbox:
   configmap:
     data:
