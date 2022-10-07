@@ -3,5 +3,6 @@ configmap:
     variable1: 1
     variable2: 2
     variable3: 3
+    valor3: 44
 juan: juancho
 pedro: drope
