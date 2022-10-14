@@ -14,9 +14,3 @@ qa:
       variable1: 1
       variable2: 2
       variable3: 3
-prod:
-  configmap:
-    data:
-      variable1: 1
-      variable2: 2
-      variable3: 3

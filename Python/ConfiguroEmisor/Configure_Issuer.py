@@ -4,10 +4,15 @@ import os
 import os.path
 import shutil
 import sys
- 
+import secrets
+
+password_length = 16
+postgrespassword = secrets.token_urlsafe(password_length)
+print(postgrespassword)
+
 # total arguments
 n = len(sys.argv)
-print("Total arguments passed:", n)
+#print("Total arguments passed:", n)
  
 # Arguments passed
 print("\nName of Python script:", sys.argv[0])
@@ -78,6 +83,14 @@ def Copy_folders():
       destination = shutil.copytree(src, dest) 
    except OSError as exc:
       print('Error copy files ' + str(exc))
+   
+   
+   removefile = dest + '/templates/service-account.yaml'
+   print('Remove file: ' + removefile)
+   if os.path.exists(removefile):
+      os.remove(removefile)
+   else:
+      print(removefile + ' not exist')
 
    src = 'jcard-prepaid-bimo-restapi'
    dest = 'jcard-prepaid-'+ nombre_emisor +'-restapi'
@@ -106,8 +119,71 @@ def Read_YAML():
 
 
 def Change_YAML():
+
+
+   microservice_chart_yaml = 'jcard-prepaid-'+ nombre_emisor +'-app/Chart.yaml' 
+   print('Configuring file: ' + microservice_chart_yaml) 
+   microservice_chart = open(microservice_chart_yaml, 'r')
+   try:
+      microservice_chart_data = yaml.safe_load(microservice_chart)
+   except yaml.YAMLError as exc:
+      print(exc)
+   microservicename = nombre_emisor.lower() + '-jcard-app'
+   microservice_chart_data['name'] = microservicename
+   with open(microservice_chart_yaml, 'w') as yaml_file:
+      try:
+         yaml_file.write( yaml.dump(microservice_chart_data, default_flow_style=False))
+      except yaml.YAMLError as exc:
+         print(exc)
+
+   microservice_chart_yaml = 'jcard-prepaid-'+ nombre_emisor +'-invoice/Chart.yaml' 
+   print('Configuring file: ' + microservice_chart_yaml) 
+   microservice_chart = open(microservice_chart_yaml, 'r')
+   try:
+      microservice_chart_data = yaml.safe_load(microservice_chart)
+   except yaml.YAMLError as exc:
+      print(exc)
+   microservicename = nombre_emisor.lower() + '-jcard-invoice'
+   microservice_chart_data['name'] = microservicename
+   with open(microservice_chart_yaml, 'w') as yaml_file:
+      try:
+         yaml_file.write( yaml.dump(microservice_chart_data, default_flow_style=False))
+      except yaml.YAMLError as exc:
+         print(exc)
+
+   microservice_chart_yaml = 'jcard-prepaid-'+ nombre_emisor +'-jcard/Chart.yaml' 
+   print('Configuring file: ' + microservice_chart_yaml) 
+   microservice_chart = open(microservice_chart_yaml, 'r')
+   try:
+      microservice_chart_data = yaml.safe_load(microservice_chart)
+   except yaml.YAMLError as exc:
+      print(exc)
+   microservicename = nombre_emisor.lower() + '-jcard'
+   microservice_chart_data['name'] = microservicename
+   with open(microservice_chart_yaml, 'w') as yaml_file:
+      try:
+         yaml_file.write( yaml.dump(microservice_chart_data, default_flow_style=False))
+      except yaml.YAMLError as exc:
+         print(exc)
+
+   microservice_chart_yaml = 'jcard-prepaid-'+ nombre_emisor +'-restapi/Chart.yaml' 
+   print('Configuring file: ' + microservice_chart_yaml) 
+   microservice_chart = open(microservice_chart_yaml, 'r')
+   try:
+      microservice_chart_data = yaml.safe_load(microservice_chart)
+   except yaml.YAMLError as exc:
+      print(exc)
+   microservicename = nombre_emisor.lower() + '-jcard-restapi'
+   microservice_chart_data['name'] = microservicename
+   with open(microservice_chart_yaml, 'w') as yaml_file:
+      try:
+         yaml_file.write( yaml.dump(microservice_chart_data, default_flow_style=False))
+      except yaml.YAMLError as exc:
+         print(exc)
+
+
    microservice_configmap_yaml = 'jcard-prepaid-'+ nombre_emisor +'-app/values-main.yaml' 
-   print('Configurando el file: ' + microservice_configmap_yaml) 
+   print('Configuring file: ' + microservice_configmap_yaml) 
    configmap_template = open(microservice_configmap_yaml, 'r')
    try:
       configmap_template_data = yaml.safe_load(configmap_template)
@@ -119,9 +195,9 @@ def Change_YAML():
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))
       except yaml.YAMLError as exc:
          print(exc)
-
+      
    microservice_configmap_yaml = 'jcard-prepaid-'+ nombre_emisor +'-invoice/values-main.yaml' 
-   print('Configurando el file: ' + microservice_configmap_yaml) 
+   print('Configuring file: ' + microservice_configmap_yaml) 
    configmap_template = open(microservice_configmap_yaml, 'r')
    try:
       configmap_template_data = yaml.safe_load(configmap_template)
@@ -135,8 +211,9 @@ def Change_YAML():
       except yaml.YAMLError as exc:
          print(exc)
 
+
    microservice_configmap_yaml = 'jcard-prepaid-'+ nombre_emisor +'-jcard/values-main.yaml' 
-   print('Configurando el file: ' + microservice_configmap_yaml) 
+   print('Configuring file: ' + microservice_configmap_yaml) 
    configmap_template = open(microservice_configmap_yaml, 'r')
    try:
       configmap_template_data = yaml.safe_load(configmap_template)
@@ -153,7 +230,7 @@ def Change_YAML():
       except yaml.YAMLError as exc:
          print(exc)
    microservice_configmap_yaml = 'jcard-prepaid-'+ nombre_emisor +'-restapi/values-main.yaml' 
-   print('Configurando el file: ' + microservice_configmap_yaml) 
+   print('Configuring file: ' + microservice_configmap_yaml) 
    configmap_template = open(microservice_configmap_yaml, 'r')
    try:
       configmap_template_data = yaml.safe_load(configmap_template)
@@ -166,6 +243,7 @@ def Change_YAML():
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))
       except yaml.YAMLError as exc:
          print(exc)
+
 
 
  
