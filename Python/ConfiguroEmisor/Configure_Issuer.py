@@ -105,7 +105,7 @@ def Copy_folders():
 def Read_YAML():
    global nombre_emisor
    global port_emisor
-   global database_emisor
+   global database_emisor, service_account
    with open('config.yaml') as yaml_config:
       try:
          new_values_issuer = yaml.safe_load(yaml_config)
@@ -115,7 +115,7 @@ def Read_YAML():
    nombre_emisor = new_values_issuer_data['nombre'].lower()
    port_emisor = new_values_issuer_data['port']
    database_emisor = new_values_issuer_data['database'].lower()
-   
+   service_account = new_values_issuer_data['service_account'].lower()
 
 
 def Change_YAML():
@@ -190,6 +190,7 @@ def Change_YAML():
    except yaml.YAMLError as exc:
       print(exc)
    configmap_template_data['database']['name'] = database_emisor
+   configmap_template_data['service_account'] = service_account
    with open(microservice_configmap_yaml, 'w') as yaml_file:
       try:
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))
@@ -205,6 +206,7 @@ def Change_YAML():
       print(exc)
    configmap_template_data['database']['name'] = database_emisor
    configmap_template_data['config']['jcard_issuer_name'] = nombre_emisor.upper()
+   configmap_template_data['service_account'] = service_account
    with open(microservice_configmap_yaml, 'w') as yaml_file:
       try:
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))
@@ -224,6 +226,7 @@ def Change_YAML():
    configmap_template_data['jcard']['server_port'] = port_emisor
    configmap_template_data['services']['jcard']['port'] = port_emisor
    configmap_template_data['services']['jcard']['target_port'] = port_emisor
+   configmap_template_data['service_account'] = service_account
    with open(microservice_configmap_yaml, 'w') as yaml_file:
       try:
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))
@@ -238,6 +241,7 @@ def Change_YAML():
       print(exc)
    configmap_template_data['database']['name'] = database_emisor
    configmap_template_data['configmap']['issuer_name'] = nombre_emisor.upper()
+   configmap_template_data['service_account'] = service_account
    with open(microservice_configmap_yaml, 'w') as yaml_file:
       try:
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))

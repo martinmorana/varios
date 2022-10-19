@@ -2,6 +2,7 @@ dev:
   nombre: minuTosSSDFRE
   port: 8899
   database: minuTosSSDFRE_Deve
+  service_account: cuentadeservicio
 sandbox:
   configmap:
     data:
