@@ -85,12 +85,12 @@ def Copy_folders():
       print('Error copy files ' + str(exc))
    
    
-   removefile = dest + '/templates/service-account.yaml'
-   print('Remove file: ' + removefile)
-   if os.path.exists(removefile):
-      os.remove(removefile)
-   else:
-      print(removefile + ' not exist')
+   # removefile = dest + '/templates/service-account.yaml'
+   # print('Remove file: ' + removefile)
+   # if os.path.exists(removefile):
+   #    os.remove(removefile)
+   # else:
+   #    print(removefile + ' not exist')
 
    src = 'jcard-prepaid-bimo-restapi'
    dest = 'jcard-prepaid-'+ nombre_emisor +'-restapi'
@@ -182,6 +182,21 @@ def Change_YAML():
          print(exc)
 
 
+   microservice_chart_yaml = 'jcard-prepaid-'+ nombre_emisor +'-ds-external-sor/Chart.yaml' 
+   print('Configuring file: ' + microservice_chart_yaml) 
+   microservice_chart = open(microservice_chart_yaml, 'r')
+   try:
+      microservice_chart_data = yaml.safe_load(microservice_chart)
+   except yaml.YAMLError as exc:
+      print(exc)
+   microservicename = nombre_emisor.lower() + '-jcard-ds-external-sor'
+   microservice_chart_data['name'] = microservicename
+   with open(microservice_chart_yaml, 'w') as yaml_file:
+      try:
+         yaml_file.write( yaml.dump(microservice_chart_data, default_flow_style=False))
+      except yaml.YAMLError as exc:
+         print(exc)
+
    microservice_configmap_yaml = 'jcard-prepaid-'+ nombre_emisor +'-app/values-main.yaml' 
    print('Configuring file: ' + microservice_configmap_yaml) 
    configmap_template = open(microservice_configmap_yaml, 'r')
@@ -226,7 +241,6 @@ def Change_YAML():
    configmap_template_data['jcard']['server_port'] = port_emisor
    configmap_template_data['services']['jcard']['port'] = port_emisor
    configmap_template_data['services']['jcard']['target_port'] = port_emisor
-   configmap_template_data['service_account'] = service_account
    with open(microservice_configmap_yaml, 'w') as yaml_file:
       try:
          yaml_file.write( yaml.dump(configmap_template_data, default_flow_style=False))

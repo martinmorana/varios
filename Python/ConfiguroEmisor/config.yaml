@@ -1,8 +1,8 @@
 dev:
   nombre: minuTosSSDFRE
   port: 8899
-  database: minuTosSSDFRE_Deve
-  service_account: cuentadeservicio
+  database: bimo_jcard_dev
+  service_account: bimo-jcard
 sandbox:
   configmap:
     data:
