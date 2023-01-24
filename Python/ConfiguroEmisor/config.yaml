@@ -1,17 +1,18 @@
 dev:
-  nombre: minuTosSSDFRE
-  port: 8899
-  database: bimo_jcard_dev
-  service_account: bimo-jcard
-sandbox:
-  configmap:
-    data:
-      variable1: 1
-      variable2: 2
-      variable3: 3
+  nombre: prueba-issuer-3
+  port: 29103
+  database: prueba_issuer_dev_3
+  service_account: xperience-jcard
+  create_db: False
+  external-sor: False
+
 qa:
-  configmap:
-    data:
-      variable1: 1
-      variable2: 2
-      variable3: 3
+  nombre: prueba-issuer
+  port: 29103
+  database: prueba_issuer_qa
+  service_account: xperience-jcard
+  create_db: True
+  external-sor: True
+
+
+
