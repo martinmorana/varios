@@ -1,0 +1,5 @@
+configmap:
+  data:
+    protect_log: false
+    use_json_loggin: true
+    use_xml_loggin: false
