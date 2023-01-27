@@ -1,5 +1,77 @@
+use_nexus: false
+aws_xray_context_missing: LOG_ERROR
+repository:
+  ssh_clone_url: "git@gitlab.com:arquitectura-prisma/prepaid-card/card/card.git"
+  commit : ef714ce7ada25889ed6c9b24e8ebfb8235cc5416
+  
+services:
+  jcard:
+    type: NodePort
+    port: 29103
+    health_port: 15000
+    target_port: 29103
+    replicas: 1
+    env: {}
+    enabled: true
+    resources: {}
+
+image:
+  repository: "095053725160.dkr.ecr.us-east-1.amazonaws.com/jcard-prepaidcard-jcard"
+  tag: 2.5.25
+  pullPolicy: Always
+
+database:
+  host: pgs-praw001-prepay-14.cluster-cpbv9clhyyed.us-east-1.rds.amazonaws.com
+  name: carrefour_jcard_prod
+  port: 5432
+
+hsm:
+  host: us01crypto01.virtucrypt.com
+  port: 4355
+  hsm_cert_path: /jcard/jcard/data/hsm-cert
+  certs_path: /data/certs
+  use_ssm: false
+  cert_name: futurex-excrypt
+  active_hsm_trace: false
+
 configmap:
   data:
     protect_log: false
     use_json_loggin: true
     use_xml_loggin: false
+    app_name: JCARD
+
+jcard:
+  server_port: 29103
+  issuer_name: carrefour
+  check_emv_country: false
+  check_emv_amount: false
+  check_emv_random_number: false
+  check_emv_timestamp: false
+  check_emv_txn_type: false
+  check_emv_tvr: false
+
+sor:
+  use_internal_sor: true
+  use_external_sor: false
+  # ds_external_sor_host: carrefour-jcard-ds-external-sor-svc.jcard.svc.cluster.local
+  # ds_external_sor_port: 29100
+  # sor_external_base_url: http://api-mock-svc.backend.svc.cluster.local:8080/api/
+  # sor_external_api_key: "1234567"
+
+health:
+  port: 15000
+  liveness:
+    path: /health/liveness
+    failureThreshold: 2
+    initialDelaySeconds: 100
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 3
+  readiness:
+    path: /health/readiness
+    failureThreshold: 2
+    initialDelaySeconds: 20
+    periodSeconds: 100
+    successThreshold: 1
+    timeoutSeconds: 3
